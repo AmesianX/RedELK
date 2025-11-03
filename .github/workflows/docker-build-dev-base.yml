@@ -18,9 +18,13 @@ jobs:
       - name: Prepare
         id: prepare
         run: |
-          echo ::set-output name=docker_image::${DOCKER_IMAGE}
-          echo ::set-output name=build_args::BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
-            VCS_REF=${GITHUB_SHA::8}
+          echo "docker_image=${DOCKER_IMAGE}" >> $GITHUB_OUTPUT
+          {
+            echo "build_args<<EOF"
+            echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "VCS_REF=${GITHUB_SHA::8}"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
         env:
           DOCKER_IMAGE: ${{ vars.DOCKER_REPO || 'outflanknl' }}/redelk-base
 
